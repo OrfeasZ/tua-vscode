@@ -1,0 +1,473 @@
+{
+	"version": "0.0.1",
+	"name": "Tua",
+	"scopeName": "source.tua",
+	"patterns": [
+		{
+			"begin": "\\b(?:(local)\\s+)?(function)\\s*(?:\\s+([a-zA-Z_][a-zA-Z0-9_]*(?:([\\.:])[a-zA-Z_][a-zA-Z0-9_]*)?)\\s*)?(\\<.+\\>)?(\\()",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.modifier.local.tua"
+				},
+				"2": {
+					"name": "keyword.control.tua"
+				},
+				"3": {
+					"name": "entity.name.function.tua"
+				},
+				"4": {
+					"name": "punctuation.separator.parameter.tua"
+				},
+				"6": {
+					"name": "punctuation.definition.parameters.begin.tua"
+				}
+			},
+			"end": "\\)",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.parameters.end.tua"
+				}
+			},
+			"name": "meta.function.tua",
+			"patterns": [
+				{
+					"include": "#tua_type"
+				}
+			]
+		},
+		{
+			"begin": "([a-zA-Z_][a-zA-Z0-9_]*)\\s*(:)\\s*\\(",
+			"end": "\\)",
+			"beginCaptures": {
+				"2": {
+					"name": "keyword.operator.tua"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#tua_standalone_type"
+				}
+			]
+		},
+		{
+			"begin": "\\->\\s*\\(",
+			"end": "\\)",
+			"patterns": [
+				{
+					"include": "#tua_standalone_type"
+				},
+				{
+					"match": ",",
+					"name": "punctuation.separator.arguments.tua"
+				}
+			]
+		},
+		{
+			"match": "\\->\\s*\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b(?<!int|float|bool|str|any|void)",
+			"captures": {
+				"1": {
+					"name": "entity.name.type.tua"
+				}
+			}
+		},
+		{
+			"begin": "(typedef)\\s+([a-zA-Z_][a-zA-Z0-9_]*)(<.+>)?\\s*\\{",
+			"end": "\\}",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.tua"
+				},
+				"2": {
+					"name": "entity.name.type.tua"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#tua_type"
+				},
+				{
+					"include": "#tua_standalone_type"
+				}
+			]
+		},
+		{
+			"begin": "(global)\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\{",
+			"end": "\\}",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.tua"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#tua_type"
+				},
+				{
+					"include": "#tua_standalone_type"
+				}
+			]
+		},
+		{
+			"match": "(typedef)\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+			"captures": {
+				"1": {
+					"name": "storage.type.tua"
+				},
+				"2": {
+					"name": "entity.name.type.tua"
+				}
+			}
+		},
+		{
+			"match": "(global)\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+			"captures": {
+				"1": {
+					"name": "storage.type.tua"
+				}
+			}
+		},
+		{
+			"match": "(?<![\\w\\d.])0[xX][0-9A-Fa-f]+(?![pPeE.0-9])",
+			"name": "constant.numeric.integer.hexadecimal.tua"
+		},
+		{
+			"match": "(?<![\\w\\d.])0[xX][0-9A-Fa-f]+(\\.[0-9A-Fa-f]+)?([eE]-?\\d*)?([pP][-+]\\d+)?",
+			"name": "constant.numeric.float.hexadecimal.tua"
+		},
+		{
+			"match": "(?<![\\w\\d.])\\d+(?![pPeE.0-9])",
+			"name": "constant.numeric.integer.tua"
+		},
+		{
+			"match": "(?<![\\w\\d.])\\d+(\\.\\d+)?([eE]-?\\d*)?",
+			"name": "constant.numeric.float.tua"
+		},
+		{
+			"begin": "'",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.begin.tua"
+				}
+			},
+			"end": "'",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.end.tua"
+				}
+			},
+			"name": "string.quoted.single.tua",
+			"patterns": [
+				{
+					"include": "#escaped_char"
+				}
+			]
+		},
+		{
+			"begin": "\"",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.begin.tua"
+				}
+			},
+			"end": "\"",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.end.tua"
+				}
+			},
+			"name": "string.quoted.double.tua",
+			"patterns": [
+				{
+					"include": "#escaped_char"
+				}
+			]
+		},
+		{
+			"begin": "(?<=\\.cdef)\\s*(\\[(=*)\\[)",
+			"beginCaptures": {
+				"0": {
+					"name": "string.quoted.other.multiline.tua"
+				},
+				"1": {
+					"name": "punctuation.definition.string.begin.tua"
+				}
+			},
+			"contentName": "meta.embedded.tua",
+			"end": "(\\]\\2\\])",
+			"endCaptures": {
+				"0": {
+					"name": "string.quoted.other.multiline.tua"
+				},
+				"1": {
+					"name": "punctuation.definition.string.end.tua"
+				}
+			},
+			"patterns": [
+				{
+					"include": "source.c"
+				}
+			]
+		},
+		{
+			"begin": "(?<!--)\\[(=*)\\[",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.begin.tua"
+				}
+			},
+			"end": "\\]\\1\\]",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.end.tua"
+				}
+			},
+			"name": "string.quoted.other.multiline.tua"
+		},
+		{
+			"captures": {
+				"1": {
+					"name": "punctuation.definition.comment.tua"
+				}
+			},
+			"match": "\\A(#!).*$\\n?",
+			"name": "comment.line.shebang.tua"
+		},
+		{
+			"begin": "(^[ \\t]+)?(?=--)",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.whitespace.comment.leading.tua"
+				}
+			},
+			"end": "(?!\\G)((?!^)[ \\t]+\\n)?",
+			"endCaptures": {
+				"1": {
+					"name": "punctuation.whitespace.comment.trailing.tua"
+				}
+			},
+			"patterns": [
+				{
+					"begin": "--\\[(=*)\\[",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.begin.tua"
+						}
+					},
+					"end": "\\]\\1\\]",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.end.tua"
+						}
+					},
+					"name": "comment.block.tua"
+				},
+				{
+					"begin": "--",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.tua"
+						}
+					},
+					"end": "\\n",
+					"name": "comment.line.double-dash.tua"
+				}
+			]
+		},
+		{
+			"captures": {
+				"1": {
+					"name": "keyword.control.goto.tua"
+				},
+				"2": {
+					"name": "constant.other.placeholder.tua"
+				}
+			},
+			"match": "\\b(goto)\\s+([a-zA-Z_][a-zA-Z0-9_]*)"
+		},
+		{
+			"captures": {
+				"1": {
+					"name": "punctuation.definition.label.begin.tua"
+				},
+				"2": {
+					"name": "punctuation.definition.label.end.tua"
+				}
+			},
+			"match": "(::)[a-zA-Z_][a-zA-Z0-9_]*(::)",
+			"name": "constant.other.placeholder.tua"
+		},
+		{
+			"match": "\\b(break|do|else|for|if|elseif|goto|return|then|repeat|while|until|end|function|local|in)\\b",
+			"name": "keyword.control.tua"
+		},
+		{
+			"match": "\\b(int|float|bool|str|any|void)\\b",
+			"name": "storage.type.tua"
+		},
+		{
+			"match": "(?<![^.]\\.|:)\\b(false|nil|true)\\b|(?<![.])\\.{3}(?!\\.)",
+			"name": "constant.language.tua"
+		},
+		{
+			"match": "(?<![^.]\\.|:)\\b(self)\\b",
+			"name": "variable.language.self.tua"
+		},
+		{
+			"match": "\\b(and|or|not)\\b",
+			"name": "keyword.operator.tua"
+		},
+		{
+			"match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b(?=\\s*(?:[({\"']|\\[\\[))",
+			"name": "support.function.any-method.tua"
+		},
+		{
+			"match": "(?<=[^.]\\.|:)\\b([a-zA-Z_][a-zA-Z0-9_]*)",
+			"name": "variable.other.tua"
+		},
+		{
+			"match": "\\+|-|%|#|\\*|\\/|\\^|==?|~=|<=?|>=?|(?<!\\.)\\.{2}(?!\\.)",
+			"name": "keyword.operator.tua"
+		},
+		{
+			"match": "\\?",
+			"name": "keyword.operator.optional.tua"
+		},
+		{
+			"match": "[a-zA-Z_][a-zA-Z0-9_]*\\s*(:)\\s*\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b(?<!int|float|bool|str|any|void)",
+			"captures": {
+				"1": {
+					"name": "keyword.operator.tua"
+				},
+				"2": {
+					"name": "entity.name.type.tua"
+				}
+			}
+		},
+		{
+			"begin": "[a-zA-Z_][a-zA-Z0-9_]*\\s*(:)\\s*\\{",
+			"end": "\\}",
+			"patterns": [
+				{
+					"include": "#tua_type"
+				},
+				{
+					"include": "#tua_standalone_type"
+				}
+			]
+		}
+	],
+	"repository": {
+		"escaped_char": {
+			"patterns": [
+				{
+					"match": "\\\\[abfnrtvz\\\\\"'\\n]",
+					"name": "constant.character.escape.tua"
+				},
+				{
+					"match": "\\\\\\d{1,3}",
+					"name": "constant.character.escape.byte.tua"
+				},
+				{
+					"match": "\\\\x[0-9A-Fa-f][0-9A-Fa-f]",
+					"name": "constant.character.escape.byte.tua"
+				},
+				{
+					"match": "\\\\u\\{[0-9A-Fa-f]+\\}",
+					"name": "constant.character.escape.unicode.tua"
+				},
+				{
+					"match": "\\\\.",
+					"name": "invalid.illegal.character.escape.tua"
+				}
+			]
+		},
+		"tua_standalone_type": {
+			"patterns": [
+				{
+					"match": "(int|float|bool|str|any|void)",
+					"name": "storage.type.tua"
+				},
+				{
+					"begin": "\\(",
+					"end": "\\)\\s*\\-",
+					"patterns": [
+						{
+							"include": "#tua_standalone_type"
+						}
+					]
+				},
+				{
+					"begin": ">\\s*\\(",
+					"end": "\\)",
+					"patterns": [
+						{
+							"include": "#tua_standalone_type"
+						},
+						{
+							"match": ",",
+							"name": "punctuation.separator.arguments.tua"
+						}
+					]
+				},
+				{
+					"match": ">\\s*\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b(?<!int|float|bool|str|any|void)",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.tua"
+						}
+					}
+				},
+				{
+					"begin": "(\\{)",
+					"end": "(\\})",
+					"patterns": [
+						{
+							"include": "#tua_standalone_type"
+						},
+						{
+							"include": "#tua_type"
+						}
+					]
+				},
+				{
+					"match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b(?<!int|float|bool|str|any|void)",
+					"captures": {
+						"1": {
+							"name": "entity.name.type.tua"
+						}
+					}
+				},
+				{
+					"match": ",",
+					"name": "punctuation.separator.arguments.tua"
+				}
+			]
+		},
+		"tua_type": {
+			"patterns": [
+				{
+					"match": "(int|float|bool|str|any|void)",
+					"name": "storage.type.tua"
+				},
+				{
+					"match": "(:)\\s*\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b(?<!int|float|bool|str|any|void)",
+					"captures": {
+						"1": {
+							"name": "keyword.operator.tua"
+						},
+						"2": {
+							"name": "entity.name.type.tua"
+						}
+					}
+				},
+				{
+					"match": "[a-zA-Z_][a-zA-Z0-9_]*",
+					"name": "variable.parameter.function.tua"
+				},
+				{
+					"include": "#tua_standalone_type"
+				}
+			]
+		}
+	}
+}
