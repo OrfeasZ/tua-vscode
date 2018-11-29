@@ -1,0 +1,17 @@
+{
+  "name": "tua-server",
+  "description": "Tua language server for VS Code.",
+  "version": "0.0.1",
+  "publisher": "orfeasz",
+  "engines": {
+    "node": "*"
+  },
+  "dependencies": {
+    "vscode-languageserver": "^4.1.3",
+    "tua": "file:../../tua"
+  },
+  "scripts": {},
+  "devDependencies": {
+    "@types/node": "^8.10.25"
+  }
+}

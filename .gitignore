@@ -61,3 +61,7 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 
+dist
+node_modules
+.vscode-test/
+*.vsix

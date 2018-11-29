@@ -1,0 +1,50 @@
+{
+  "name": "tua",
+  "displayName": "Tua",
+  "description": "Tua support for VSCode",
+  "publisher": "orfeasz",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.28.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:tua"
+  ],
+  "main": "./client/dist/extension",
+  "contributes": {
+    "languages": [
+      {
+        "id": "tua",
+        "aliases": [
+          "Tua",
+          "tua"
+        ],
+        "extensions": [
+          ".tua"
+        ],
+        "configuration": "./client/language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "tua",
+        "scopeName": "source.tua",
+        "path": "./client/syntaxes/tua.tmLanguage.json"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "cd client && npm run update-vscode && cd .. && npm run compile",
+    "compile": "tsc -b",
+    "watch": "tsc -b -w",
+    "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
+  },
+  "devDependencies": {
+    "@types/node": "^8.10.25",
+    "tslint": "^5.11.0",
+    "typescript": "^3.1.6"
+  }
+}
