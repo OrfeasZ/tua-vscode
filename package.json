@@ -5,7 +5,7 @@
   "publisher": "orfeasz",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.28.0"
+    "vscode": "^1.33.0"
   },
   "categories": [
     "Programming Languages"
@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@types/node": "^8.10.25",
-    "tslint": "^5.11.0",
-    "typescript": "^3.1.6"
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
   }
 }
