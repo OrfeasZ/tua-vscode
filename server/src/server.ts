@@ -1,17 +1,15 @@
 import {
     createConnection,
-    TextDocuments,
-    ProposedFeatures,
-    InitializeParams,
     Diagnostic,
     DiagnosticSeverity,
+    InitializeParams,
+    ProposedFeatures,
+    TextDocuments,
 } from "vscode-languageserver";
 
-import {
-    Analyzer
-} from "tua/dist/parser/analyzer";
+import {Analyzer} from "tua/dist/parser/analyzer";
 
-import { TuaError } from 'tua/dist/util/analysisError';
+import {ErrorSeverity} from 'tua/dist/util/analysisError';
 
 // Create a connection for the server. The connection uses Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -32,6 +30,21 @@ connection.onInitialize((params: InitializeParams) => {
 connection.onInitialized(() => {
 });
 
+const mapSeverity = (severity: ErrorSeverity): DiagnosticSeverity => {
+    switch (severity) {
+        case ErrorSeverity.INFO:
+            return DiagnosticSeverity.Information;
+
+        case ErrorSeverity.WARNING:
+            return DiagnosticSeverity.Warning;
+
+        case ErrorSeverity.ERROR:
+        case ErrorSeverity.FATAL:
+        default:
+            return DiagnosticSeverity.Error;
+    }
+};
+
 
 // The content of a text document has changed. This event is emitted
 // when the text document first opened or when its content has changed.
@@ -43,13 +56,13 @@ documents.onDidChangeContent(change => {
 
     for (const error of errors) {
         const diagnostic: Diagnostic = {
-            severity: DiagnosticSeverity.Error,
+            severity: mapSeverity(error.error.severity),
             range: {
                 start: change.document.positionAt(error.indexStart),
                 end: change.document.positionAt(error.indexEnd)
             },
-            message: TuaError[error.error],
-            code: error.error,
+            message: error.error.message,
+            code: error.error.code,
             source: 'tua'
         };
 
